@@ -5,17 +5,17 @@ class Category:
     self.ledger = []
 
   def deposit(self,amount,description=""):
-    self.ledger.append({"amount":amount,"description":description})
+    self.ledger.append({"amount":round(float(amount),2),"description":description})
   
   def withdraw(self,amount,description=""):
     if self.check_funds(amount):
-      self.ledger.append({"amount":(amount*-1),"description":description})
+      self.ledger.append({"amount":round(float(amount*-1),2),"description":description})
       return True
     else:
       return False
 
   def get_balance(self):
-    balance = 0
+    balance = 0.0
     for iter in range(len(self.ledger)):
       balance = balance + (self.ledger[iter]['amount'])
     return balance
@@ -37,7 +37,7 @@ class Category:
     return self.name
 
   def get_withdrawals(self):
-    _sum=0
+    _sum=0.0
     for i in self.ledger:
       _sum=_sum + (i['amount'] if i['amount']<0 else 0)
     return (_sum*-1)
@@ -46,7 +46,9 @@ class Category:
     tmp=""
     tmp=f"{self.name.center(30,'*')}\n"
     for i in self.ledger:
-      tmp = tmp + f"{i['description'].ljust(23,' ')[:23]}{str(round(i['amount'],2)).rjust(7,' ')}\n"
+      nDesc = i['description'].ljust(22,' ')[:23]
+      nAmount = str(round(i['amount'],2))
+      tmp = tmp + f"{nDesc}{nAmount.rjust(7,' ')}\n"
     tmp = tmp + f"Total: {self.get_balance():.2f}"
     return tmp
 
@@ -75,7 +77,7 @@ def create_spend_chart(categories:list):
   spendB = [(spb*"o").rjust(11," ") for spb in spend]
 
   print(spendB)
-  for i in range(10):
+  for i in range(11):
     for j in spendB:
       chart [i] = str(chart[i]) + f" {j[i]} " 
     chart[i]=str(chart[i])+"\n"
@@ -86,7 +88,7 @@ def create_spend_chart(categories:list):
     retValue = retValue + chart[iter]
   
   #criando o separador com hifens
-  retValue = retValue + str('\n'+" "*4 + '-'*(3*len(categories))+'-')+'\n'
+  retValue = retValue + str(" "*4 + '-'*(3*len(categories))+'-')+'\n'
 
   for i in range(maxStr):
     retValue = retValue + " "*4
